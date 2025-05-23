@@ -11,6 +11,7 @@ class AmountView: UIView {
     
     private let title: String
     private let textAlignment: NSTextAlignment
+    private let amountLabelIdentifier: String
     
     private lazy var titleLabel: UILabel = {
         LabelFactory.build(
@@ -31,8 +32,18 @@ class AmountView: UIView {
             ])
         text.addAttributes([.font: ThemeFont.bold(ofSize: 16)], range: NSMakeRange(0, 1))
         label.attributedText = text
+        label.accessibilityIdentifier = amountLabelIdentifier
         return label
     }()
+    
+    func configure(amount: Double) {
+        let text = NSMutableAttributedString(
+            string: amount.currencyFormatted,
+            attributes: [.font: ThemeFont.bold(ofSize: 24)]
+        )
+        text.addAttributes([.font: ThemeFont.bold(ofSize: 16)], range: NSMakeRange(0, 1))
+        amountLabel.attributedText = text
+    }
     
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
@@ -43,9 +54,10 @@ class AmountView: UIView {
         return stackView
     }()
     
-    init(title: String, textAlignment: NSTextAlignment) {
+    init(title: String, textAlignment: NSTextAlignment, amountLabelIdentifier: String) {
         self.title = title
         self.textAlignment = textAlignment
+        self.amountLabelIdentifier = amountLabelIdentifier
         super.init(frame: .zero)
         layout()
     }
